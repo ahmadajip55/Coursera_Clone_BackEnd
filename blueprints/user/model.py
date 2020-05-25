@@ -16,6 +16,7 @@ class Users(db.Model):
     place_birth = db.Column(db.String(200), nullable=False)
     date_birth = db.Column(db.String(200), nullable=False)
     address = db.Column(db.String(1000))
+    salt = db.Column(db.String(200))
     created_at = db.Column(db.DateTime(timezone=True), server_default=func.now())
     updated_at = db.Column(db.DateTime(timezone=True), onupdate=func.now())
 
@@ -36,12 +37,16 @@ class Users(db.Model):
         "full_name": fields.String,
     }
 
-    def __init__(self, username, full_name, pin, place_birth, date_birth, address):
+    def __init__(
+        self, username, full_name, pin, place_birth, date_birth, address, salt
+    ):
         self.username = username
         self.full_name = full_name
+        self.pin = pin
         self.place_birth = place_birth
         self.date_birth = date_birth
         self.address = address
+        self.salt = salt
 
     def __rpr__(self):
         return "<Users %r>" % self.id

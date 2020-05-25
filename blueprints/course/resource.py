@@ -33,9 +33,10 @@ class CoursesResource(Resource):
     def post(self):
         parser = reqparse.RequestParser()
         parser.add_argument("name_course", location="json", required=True)
+        parser.add_argument("description", location="json")
         args = parser.parse_args()
 
-        result = Courses(args["name_course"])
+        result = Courses(args["name_course"], args["description"])
 
         db.session.add(result)
         db.session.commit()
@@ -45,12 +46,14 @@ class CoursesResource(Resource):
     def put(self, id):
         parser = reqparse.RequestParser()
         parser.add_argument("name_course", location="json", required=True)
+        parser.add_argument("description", location="json")
         args = parser.parse_args()
 
         course = Courses.query.get(id)
 
         if course is not None:
             course.name_course = args["name_course"]
+            course.description = args["description"]
             db.session.commit()
             return marshal(course, Courses.response_fields), 200
 

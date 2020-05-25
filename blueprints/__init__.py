@@ -70,6 +70,7 @@ from blueprints.category.resource import bp_category
 from blueprints.content.resource import bp_content
 from blueprints.question.resource import bp_question
 from blueprints.choice.resource import bp_choice
+from blueprints.auth.resource import bp_auth
 
 app.register_blueprint(bp_user, url_prefix="/user")
 app.register_blueprint(bp_course, url_prefix="/course")
@@ -82,5 +83,6 @@ app.register_blueprint(bp_category, url_prefix="/category")
 app.register_blueprint(bp_content, url_prefix="/content")
 app.register_blueprint(bp_question, url_prefix="/question")
 app.register_blueprint(bp_choice, url_prefix="/choice")
+app.register_blueprint(bp_auth, url_prefix="/auth")
 
 db.create_all()

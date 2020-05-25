@@ -39,13 +39,18 @@ class UsersResource(Resource):
         parser.add_argument("address", location="json")
         args = parser.parse_args()
 
+        salt = uuid.uuid4().hex
+        encoded = ("%s%s" % (args["pin"], salt)).encode("utf-8")
+        hash_pass = hashlib.sha512(encoded).hexdigest()
+
         result = Users(
             args["username"],
             args["full_name"],
-            args["pin"],
+            hash_pass,
             args["place_birth"],
             args["date_birth"],
             args["address"],
+            salt,
         )
 
         db.session.add(result)
