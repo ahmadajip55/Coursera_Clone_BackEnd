@@ -56,7 +56,13 @@ class UsersResource(Resource):
         db.session.add(result)
         db.session.commit()
 
-        return marshal(result, Users.response_fields), 200
+        jwt_username = marshal(result, Users.jwt_claims_fields)
+        token = create_access_token(identity=args["username"], user_claims=jwt_username)
+
+        result = marshal(result, Users.response_fields)
+        result["token"] = token
+
+        return result, 200
 
 
 class UsersAll(Resource):

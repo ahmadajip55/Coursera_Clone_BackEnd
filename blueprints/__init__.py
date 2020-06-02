@@ -6,8 +6,16 @@ from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate, MigrateCommand
 from flask_jwt_extended import JWTManager, verify_jwt_in_request, get_jwt_claims
 from flask_script import Manager
+from flask_cors import CORS
 
 app = Flask(__name__)
+CORS(
+    app,
+    origins="*",
+    allow_headers=["Content-Type", "Authorization", "Access-Control-Allow-Credentials"],
+    supports_credentials=True,
+    intercept_exceptions=False,
+)
 
 if os.environ.get("FLASK_ENV", "Production") == "Production":
     app.config.from_object(config.ProductionConfig)
@@ -22,6 +30,19 @@ db = SQLAlchemy(app)
 migrate = Migrate(app, db)
 manager = Manager(app)
 manager.add_command("db", MigrateCommand)
+
+
+@app.before_request
+def before_request():
+    if request.method != "OPTIONS":  # <-- required
+        pass
+    else:
+        # ternyata cors pake method options di awal buat ngecek CORS dan harus di return kosong 200, jadi di akalin gini deh. :D
+        return (
+            {},
+            200,
+            {"Access-Control-Allow-Origin": "*", "Access-Control-Allow-Headers": "*"},
+        )
 
 
 @app.after_request

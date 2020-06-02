@@ -244,6 +244,7 @@ class ContentsCategory(Resource):
             obj_moduls = marshal(qry_moduls, Moduls.response_fields)
             week["modul"] = obj_moduls
             index_modul = 0
+            total_duration = 0
 
             for modul in obj_moduls:
                 qry_categories = Categories.query.all()
@@ -292,7 +293,11 @@ class ContentsCategory(Resource):
                         duration + obj_quiz[0]["duration_minute"]
                     )
 
+                total_duration += week["modul"][index_modul]["total_duration_minute"]
+
                 index_modul += 1
+
+            week["total_duration_minute"] = total_duration
 
             weeks.append(week)
 
